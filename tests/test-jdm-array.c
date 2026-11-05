@@ -45,7 +45,7 @@ static void print_int_elem(u8* elem, sz index) {
 }
 
 static b8 test_array_ops(void) {
-  jdm_array_status s;
+  jdm_array_status_t s;
   test_ctx ctx = get_test_ctx();
 
   jdm_alloc_t* alloc = ctx.test_alloc;
@@ -266,7 +266,7 @@ static b8 test_array_peek(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
   int* elem = NULL;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   // peek at index 1 (notice that peek is shallow, it passes the pointer to the element, not a copy of the element)
   s = jdm_array_peek(arr, (u8**)&elem, 1);
@@ -297,7 +297,7 @@ static b8 test_array_subarray(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
   jdm_array_t* subarr = NULL;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   // create a subarray from index 0 to 2 (should contain elements 1 and 2)
   s = jdm_array_subarray(arr, &subarr, 0, 2);
@@ -356,7 +356,7 @@ static b8 test_array_copy(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
   jdm_array_t* copy = NULL;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   s = jdm_array_copy(arr, &copy);
   if(s != JDM_ARRAY_OK) {
@@ -426,7 +426,7 @@ static b8 test_array_copy(void) {
 static b8 test_array_reverse(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   s = jdm_array_reverse(arr);
   if(s != JDM_ARRAY_OK) {
@@ -472,7 +472,7 @@ static b8 test_array_reverse(void) {
 static b8 test_array_trim_capacity(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   // trim capacity
   s = jdm_array_trim_capacity(arr);
@@ -501,7 +501,7 @@ static int compare_desc(const pointer a, const pointer b) {
 static b8 test_array_sort(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   // sort the array in descending order
   s = jdm_array_sort(arr, compare_desc);
@@ -553,7 +553,7 @@ static void test_array_map_func(u8* elem) {
 static b8 test_array_map(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   // map the array to double each element
   s = jdm_array_map(arr, test_array_map_func);
@@ -606,7 +606,7 @@ static void test_array_reduce_func(u8* elem, pointer accumulator) {
 static b8 test_array_reduce(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   int sum = 0;
   s = jdm_array_reduce(arr, test_array_reduce_func, (u8*)&sum);
@@ -634,7 +634,7 @@ static b8 test_array_is_even_predicate(const pointer elem) {
 static b8 test_array_filter_mutable(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   // filter the array to keep only even numbers
   s = jdm_array_filter_mutable(arr, test_array_is_even_predicate);
@@ -674,7 +674,7 @@ static b8 test_array_filter(void) {
   test_ctx ctx = get_populated_test_ctx();
   jdm_array_t* arr = ctx.test_arr;
   jdm_array_t* filtered_arr = NULL;
-  jdm_array_status s;
+  jdm_array_status_t s;
 
   // filter the array to keep only even numbers
   s = jdm_array_filter(arr, &filtered_arr, test_array_is_even_predicate);

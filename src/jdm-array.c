@@ -60,7 +60,7 @@ void jdm_array_print(jdm_array_t* arr, sz elem_size, jdm_array_print_elem_func_t
 }
 
 #define JDM_ARRAY_MAX_ELEMENTS ((sz) - 2)
-static jdm_array_status jdm_array_expand_capacity(jdm_array_t* arr) {
+static jdm_array_status_t jdm_array_expand_capacity(jdm_array_t* arr) {
     if (arr->capacity == JDM_ARRAY_MAX_ELEMENTS) {
         JDM_LOG_ERROR("Array has reached maximum capacity");
         return JDM_ARRAY_ERR_MAX_CAP;
@@ -86,9 +86,9 @@ static jdm_array_status jdm_array_expand_capacity(jdm_array_t* arr) {
 
 }
 
-jdm_array_status jdm_array_add(jdm_array_t* arr, u8* elem) {
+jdm_array_status_t jdm_array_add(jdm_array_t* arr, u8* elem) {
     if (arr->size >= arr->capacity) {
-        jdm_array_status s = jdm_array_expand_capacity(arr);
+        jdm_array_status_t s = jdm_array_expand_capacity(arr);
         if (s != JDM_ARRAY_OK) {
             JDM_LOG_ERROR("Failed to expand array capacity");
             return s;
@@ -105,14 +105,14 @@ jdm_array_status jdm_array_add(jdm_array_t* arr, u8* elem) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_add_at(jdm_array_t* arr, u8* elem, sz index) {
+jdm_array_status_t jdm_array_add_at(jdm_array_t* arr, u8* elem, sz index) {
     if (index > arr->size) {
         JDM_LOG_ERROR("Index out of bounds for array insertion");
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
 
     if (arr->size >= arr->capacity) {
-        jdm_array_status s = jdm_array_expand_capacity(arr);
+        jdm_array_status_t s = jdm_array_expand_capacity(arr);
         if (s != JDM_ARRAY_OK) {
             JDM_LOG_ERROR("Failed to expand array capacity");
             return s;
@@ -137,7 +137,7 @@ jdm_array_status jdm_array_add_at(jdm_array_t* arr, u8* elem, sz index) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_replace_at(jdm_array_t* arr, u8* elem, sz index) {
+jdm_array_status_t jdm_array_replace_at(jdm_array_t* arr, u8* elem, sz index) {
     if (index >= arr->size) {
         JDM_LOG_ERROR("Index out of bounds for array replacement");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -152,7 +152,7 @@ jdm_array_status jdm_array_replace_at(jdm_array_t* arr, u8* elem, sz index) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_swap_at(jdm_array_t* arr, sz index1, sz index2) {
+jdm_array_status_t jdm_array_swap_at(jdm_array_t* arr, sz index1, sz index2) {
     if (index1 >= arr->size || index2 >= arr->size) {
         JDM_LOG_ERROR("Index out of bounds for array swap");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -172,9 +172,9 @@ jdm_array_status jdm_array_swap_at(jdm_array_t* arr, sz index1, sz index2) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_remove(jdm_array_t* arr, u8* elem) {
+jdm_array_status_t jdm_array_remove(jdm_array_t* arr, u8* elem) {
     sz index;
-    jdm_array_status s = jdm_array_index_of(arr, elem, &index);
+    jdm_array_status_t s = jdm_array_index_of(arr, elem, &index);
     if (s != JDM_ARRAY_OK) {
         JDM_LOG_ERROR("Element not found in array for removal");
         return s;
@@ -182,7 +182,7 @@ jdm_array_status jdm_array_remove(jdm_array_t* arr, u8* elem) {
     return jdm_array_remove_at(arr, index, JDM_NULL);
 }
 
-jdm_array_status jdm_array_remove_at(jdm_array_t* arr, sz index, u8* out_elem) {
+jdm_array_status_t jdm_array_remove_at(jdm_array_t* arr, sz index, u8* out_elem) {
     if (index >= arr->size) {
         JDM_LOG_ERROR("Index out of bounds for array removal");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -203,7 +203,7 @@ jdm_array_status jdm_array_remove_at(jdm_array_t* arr, sz index, u8* out_elem) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_remove_last(jdm_array_t* arr, u8* out_elem) {
+jdm_array_status_t jdm_array_remove_last(jdm_array_t* arr, u8* out_elem) {
     if (arr->size == 0) {
         JDM_LOG_ERROR("Array is empty, cannot remove last element");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -217,12 +217,12 @@ jdm_array_status jdm_array_remove_last(jdm_array_t* arr, u8* out_elem) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_remove_all(jdm_array_t* arr) {
+jdm_array_status_t jdm_array_remove_all(jdm_array_t* arr) {
     arr->size = 0;
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_get_at(jdm_array_t* arr, u8** elem, sz index) {
+jdm_array_status_t jdm_array_get_at(jdm_array_t* arr, u8** elem, sz index) {
     if (index >= arr->size) {
         JDM_LOG_ERROR("Index out of bounds for array retrieval");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -232,7 +232,7 @@ jdm_array_status jdm_array_get_at(jdm_array_t* arr, u8** elem, sz index) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_get_last(jdm_array_t* arr, u8** elem) {
+jdm_array_status_t jdm_array_get_last(jdm_array_t* arr, u8** elem) {
     if (arr->size == 0) {
         JDM_LOG_ERROR("Array is empty, cannot retrieve last element");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -241,7 +241,7 @@ jdm_array_status jdm_array_get_last(jdm_array_t* arr, u8** elem) {
     return jdm_array_get_at(arr, elem, arr->size - 1);
 }
 
-jdm_array_status jdm_array_peek(jdm_array_t* arr, u8** elem, sz index) {
+jdm_array_status_t jdm_array_peek(jdm_array_t* arr, u8** elem, sz index) {
     if (index >= arr->size) {
         JDM_LOG_ERROR("Index out of bounds for array peek");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -251,7 +251,7 @@ jdm_array_status jdm_array_peek(jdm_array_t* arr, u8** elem, sz index) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_index_of(jdm_array_t* arr, u8* elem, sz* out_index) {
+jdm_array_status_t jdm_array_index_of(jdm_array_t* arr, u8* elem, sz* out_index) {
     for (sz i = 0; i < arr->size; i++) {
         if (memcmp(JDM_ARRAY_BUF_ADDR(arr, i), elem, arr->element_size) == 0) {
             *out_index = i;
@@ -262,7 +262,7 @@ jdm_array_status jdm_array_index_of(jdm_array_t* arr, u8* elem, sz* out_index) {
     return JDM_ARRAY_ERR_NOT_FOUND;
 }
 
-jdm_array_status jdm_array_subarray(jdm_array_t* arr, jdm_array_t** out_subarray, sz start_index, sz end_index) {
+jdm_array_status_t jdm_array_subarray(jdm_array_t* arr, jdm_array_t** out_subarray, sz start_index, sz end_index) {
     if (start_index >= arr->size || end_index > arr->size || start_index >= end_index) {
         JDM_LOG_ERROR("Invalid indices for subarray creation");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -290,7 +290,7 @@ jdm_array_status jdm_array_subarray(jdm_array_t* arr, jdm_array_t** out_subarray
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_copy(jdm_array_t* arr, jdm_array_t** out_copy) {
+jdm_array_status_t jdm_array_copy(jdm_array_t* arr, jdm_array_t** out_copy) {
     jdm_array_config_t cfg = {
         .alloc = arr->alloc,
         .capacity = arr->capacity,
@@ -311,7 +311,7 @@ jdm_array_status jdm_array_copy(jdm_array_t* arr, jdm_array_t** out_copy) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_reverse(jdm_array_t* arr) {
+jdm_array_status_t jdm_array_reverse(jdm_array_t* arr) {
     for (sz i = 0; i < arr->size / 2; i++) {
         jdm_array_swap_at(arr, i, arr->size - 1 - i);
     }
@@ -328,7 +328,7 @@ sz jdm_array_count_of(jdm_array_t* arr, u8* elem) {
     return count;
 }
 
-jdm_array_status jdm_array_trim_capacity(jdm_array_t* arr) {
+jdm_array_status_t jdm_array_trim_capacity(jdm_array_t* arr) {
     if (arr->size == arr->capacity) {
         return JDM_ARRAY_OK; // No need to trim
     }
@@ -347,7 +347,7 @@ jdm_array_status jdm_array_trim_capacity(jdm_array_t* arr) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_sort(jdm_array_t* arr, jdm_array_compare_func_t compare) {
+jdm_array_status_t jdm_array_sort(jdm_array_t* arr, jdm_array_compare_func_t compare) {
     if (arr->size <= 1) {
         return JDM_ARRAY_OK; // Already sorted
     }
@@ -357,21 +357,21 @@ jdm_array_status jdm_array_sort(jdm_array_t* arr, jdm_array_compare_func_t compa
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_map(jdm_array_t* arr, jdm_array_map_func_t map_func) {
+jdm_array_status_t jdm_array_map(jdm_array_t* arr, jdm_array_map_func_t map_func) {
     for (sz i = 0; i < arr->size; i++) {
         map_func(JDM_ARRAY_BUF_ADDR(arr, i));
     }
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_reduce(jdm_array_t* arr, jdm_array_reduce_func_t reduce_func, pointer out) {
+jdm_array_status_t jdm_array_reduce(jdm_array_t* arr, jdm_array_reduce_func_t reduce_func, pointer out) {
     for (sz i = 0; i < arr->size; i++) {
         reduce_func(JDM_ARRAY_BUF_ADDR(arr, i), out);
     }
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_filter_mutable(jdm_array_t* arr, jdm_array_predicate_func_t predicate_func) {
+jdm_array_status_t jdm_array_filter_mutable(jdm_array_t* arr, jdm_array_predicate_func_t predicate_func) {
     sz new_size = 0;
     for (sz i = 0; i < arr->size; i++) {
         if (predicate_func(JDM_ARRAY_BUF_ADDR(arr, i))) {
@@ -385,7 +385,7 @@ jdm_array_status jdm_array_filter_mutable(jdm_array_t* arr, jdm_array_predicate_
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_filter(jdm_array_t* arr, jdm_array_t** out_filtered, jdm_array_predicate_func_t predicate_func) {
+jdm_array_status_t jdm_array_filter(jdm_array_t* arr, jdm_array_t** out_filtered, jdm_array_predicate_func_t predicate_func) {
     jdm_array_config_t cfg = {
         .alloc = arr->alloc,
         .capacity = arr->capacity,
@@ -429,7 +429,7 @@ jdm_array_iterator_t jdm_array_iterator_create(jdm_array_t* arr) {
     };
 }
 
-jdm_array_status jdm_array_iterator_next(jdm_array_iterator_t* it, u8** elem) {
+jdm_array_status_t jdm_array_iterator_next(jdm_array_iterator_t* it, u8** elem) {
     if (it->current_index >= it->arr->size) {
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
@@ -439,7 +439,7 @@ jdm_array_status jdm_array_iterator_next(jdm_array_iterator_t* it, u8** elem) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_iterator_remove(jdm_array_iterator_t* it, u8* out_elem) {
+jdm_array_status_t jdm_array_iterator_remove(jdm_array_iterator_t* it, u8* out_elem) {
     if (it->last_removed) {
         JDM_LOG_ERROR("Cannot remove the same element twice in a row");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -449,7 +449,7 @@ jdm_array_status jdm_array_iterator_remove(jdm_array_iterator_t* it, u8* out_ele
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
     sz index_to_remove = it->current_index - 1;
-    jdm_array_status s = jdm_array_remove_at(it->arr, index_to_remove, out_elem);
+    jdm_array_status_t s = jdm_array_remove_at(it->arr, index_to_remove, out_elem);
     if (s != JDM_ARRAY_OK) {
         return s;
     }
@@ -458,8 +458,8 @@ jdm_array_status jdm_array_iterator_remove(jdm_array_iterator_t* it, u8* out_ele
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_iterator_add(jdm_array_iterator_t* it, u8* elem) {
-    jdm_array_status s = jdm_array_add_at(it->arr, elem, it->current_index);
+jdm_array_status_t jdm_array_iterator_add(jdm_array_iterator_t* it, u8* elem) {
+    jdm_array_status_t s = jdm_array_add_at(it->arr, elem, it->current_index);
     if (s != JDM_ARRAY_OK) {
         return s;
     }
@@ -468,7 +468,7 @@ jdm_array_status jdm_array_iterator_add(jdm_array_iterator_t* it, u8* elem) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_iterator_replace(jdm_array_iterator_t* it, u8* elem) {
+jdm_array_status_t jdm_array_iterator_replace(jdm_array_iterator_t* it, u8* elem) {
     if (it->current_index == 0) {
         JDM_LOG_ERROR("No element to replace, iterator is at the beginning");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -477,7 +477,7 @@ jdm_array_status jdm_array_iterator_replace(jdm_array_iterator_t* it, u8* elem) 
     return jdm_array_replace_at(it->arr, elem, index_to_replace);
 }
 
-jdm_array_status jdm_array_iterator_peek(jdm_array_iterator_t* it, u8** elem) {
+jdm_array_status_t jdm_array_iterator_peek(jdm_array_iterator_t* it, u8** elem) {
     if (it->current_index == 0) {
         JDM_LOG_ERROR("No element to peek, iterator is at the beginning");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -486,7 +486,7 @@ jdm_array_status jdm_array_iterator_peek(jdm_array_iterator_t* it, u8** elem) {
     return jdm_array_peek(it->arr, elem, index_to_peek);
 }
 
-jdm_array_status jdm_array_iterator_reset(jdm_array_iterator_t* it) {
+jdm_array_status_t jdm_array_iterator_reset(jdm_array_iterator_t* it) {
     it->current_index = 0;
     it->last_removed = JDM_FALSE;
     return JDM_ARRAY_OK;
@@ -508,7 +508,7 @@ jdm_array_zip_iterator_t jdm_array_zip_iterator_create(jdm_array_t* arr1, jdm_ar
     };
 }
 
-jdm_array_status jdm_array_zip_iterator_next(jdm_array_zip_iterator_t* it, u8** elem1, u8** elem2) {
+jdm_array_status_t jdm_array_zip_iterator_next(jdm_array_zip_iterator_t* it, u8** elem1, u8** elem2) {
     if (it->current_index >= it->arr1->size || it->current_index >= it->arr2->size) {
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
@@ -519,7 +519,7 @@ jdm_array_status jdm_array_zip_iterator_next(jdm_array_zip_iterator_t* it, u8** 
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_zip_iterator_remove(jdm_array_zip_iterator_t* it, u8* out_elem1, u8* out_elem2) {
+jdm_array_status_t jdm_array_zip_iterator_remove(jdm_array_zip_iterator_t* it, u8* out_elem1, u8* out_elem2) {
     if (it->last_removed) {
         JDM_LOG_ERROR("Cannot remove the same element twice in a row");
         return JDM_ARRAY_ERR_INVALID_INDEX;
@@ -529,8 +529,8 @@ jdm_array_status jdm_array_zip_iterator_remove(jdm_array_zip_iterator_t* it, u8*
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
     sz index_to_remove = it->current_index - 1;
-    jdm_array_status s1 = jdm_array_remove_at(it->arr1, index_to_remove, out_elem1);
-    jdm_array_status s2 = jdm_array_remove_at(it->arr2, index_to_remove, out_elem2);
+    jdm_array_status_t s1 = jdm_array_remove_at(it->arr1, index_to_remove, out_elem1);
+    jdm_array_status_t s2 = jdm_array_remove_at(it->arr2, index_to_remove, out_elem2);
     if (s1 != JDM_ARRAY_OK || s2 != JDM_ARRAY_OK) {
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
@@ -539,9 +539,9 @@ jdm_array_status jdm_array_zip_iterator_remove(jdm_array_zip_iterator_t* it, u8*
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_zip_iterator_add(jdm_array_zip_iterator_t* it, u8* elem1, u8* elem2) {
-    jdm_array_status s1 = jdm_array_add_at(it->arr1, elem1, it->current_index);
-    jdm_array_status s2 = jdm_array_add_at(it->arr2, elem2, it->current_index);
+jdm_array_status_t jdm_array_zip_iterator_add(jdm_array_zip_iterator_t* it, u8* elem1, u8* elem2) {
+    jdm_array_status_t s1 = jdm_array_add_at(it->arr1, elem1, it->current_index);
+    jdm_array_status_t s2 = jdm_array_add_at(it->arr2, elem2, it->current_index);
     if (s1 != JDM_ARRAY_OK || s2 != JDM_ARRAY_OK) {
         return JDM_ARRAY_ERR_ALLOC;
     }
@@ -550,35 +550,35 @@ jdm_array_status jdm_array_zip_iterator_add(jdm_array_zip_iterator_t* it, u8* el
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_zip_iterator_replace(jdm_array_zip_iterator_t* it, u8* elem1, u8* elem2) {
+jdm_array_status_t jdm_array_zip_iterator_replace(jdm_array_zip_iterator_t* it, u8* elem1, u8* elem2) {
     if (it->current_index == 0) {
         JDM_LOG_ERROR("No element to replace, iterator is at the beginning");
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
     sz index_to_replace = it->current_index - 1;
-    jdm_array_status s1 = jdm_array_replace_at(it->arr1, elem1, index_to_replace);
-    jdm_array_status s2 = jdm_array_replace_at(it->arr2, elem2, index_to_replace);
+    jdm_array_status_t s1 = jdm_array_replace_at(it->arr1, elem1, index_to_replace);
+    jdm_array_status_t s2 = jdm_array_replace_at(it->arr2, elem2, index_to_replace);
     if (s1 != JDM_ARRAY_OK || s2 != JDM_ARRAY_OK) {
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_zip_iterator_peek(jdm_array_zip_iterator_t* it, u8** elem1, u8** elem2) {
+jdm_array_status_t jdm_array_zip_iterator_peek(jdm_array_zip_iterator_t* it, u8** elem1, u8** elem2) {
     if (it->current_index == 0) {
         JDM_LOG_ERROR("No element to peek, iterator is at the beginning");
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
     sz index_to_peek = it->current_index - 1;
-    jdm_array_status s1 = jdm_array_peek(it->arr1, elem1, index_to_peek);
-    jdm_array_status s2 = jdm_array_peek(it->arr2, elem2, index_to_peek);
+    jdm_array_status_t s1 = jdm_array_peek(it->arr1, elem1, index_to_peek);
+    jdm_array_status_t s2 = jdm_array_peek(it->arr2, elem2, index_to_peek);
     if (s1 != JDM_ARRAY_OK || s2 != JDM_ARRAY_OK) {
         return JDM_ARRAY_ERR_INVALID_INDEX;
     }
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status jdm_array_zip_iterator_reset(jdm_array_zip_iterator_t* it) {
+jdm_array_status_t jdm_array_zip_iterator_reset(jdm_array_zip_iterator_t* it) {
     it->current_index = 0;
     it->last_removed = JDM_FALSE;
     return JDM_ARRAY_OK;
