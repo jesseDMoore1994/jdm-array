@@ -42,7 +42,7 @@ jdm_array_status_t jdm_array_remove(jdm_array_t*arr, u8* elem);
 jdm_array_status_t jdm_array_remove_at(jdm_array_t*arr, sz index, u8* out_elem);
 jdm_array_status_t jdm_array_remove_last(jdm_array_t*arr, u8* out_elem);
 jdm_array_status_t jdm_array_remove_all(jdm_array_t*arr);
-jdm_array_status_t jdm_array_get_at(jdm_array_t*arr, u8** elem, sz index);
+jdm_array_status_t jdm_array_get_at(const jdm_array_t*arr, u8** elem, sz index);
 jdm_array_status_t jdm_array_get_last(jdm_array_t*arr, u8** elem);
 jdm_array_status_t jdm_array_peek(jdm_array_t*arr, u8** elem, sz index);
 jdm_array_status_t jdm_array_index_of(jdm_array_t*arr, u8* elem, sz* out_index);

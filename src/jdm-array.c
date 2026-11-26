@@ -222,7 +222,7 @@ jdm_array_status_t jdm_array_remove_all(jdm_array_t* arr) {
     return JDM_ARRAY_OK;
 }
 
-jdm_array_status_t jdm_array_get_at(jdm_array_t* arr, u8** elem, sz index) {
+jdm_array_status_t jdm_array_get_at(const jdm_array_t* arr, u8** elem, sz index) {
     if (index >= arr->size) {
         JDM_LOG_ERROR("Index out of bounds for array retrieval");
         return JDM_ARRAY_ERR_INVALID_INDEX;
