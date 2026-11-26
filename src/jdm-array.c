@@ -413,7 +413,7 @@ sz jdm_array_element_size(jdm_array_t* arr) {
     return arr->element_size;
 }
 
-sz jdm_array_size(jdm_array_t* arr) {
+sz jdm_array_size(const jdm_array_t* arr) {
     return arr->size;
 }
 

@@ -57,7 +57,7 @@ jdm_array_status_t jdm_array_filter_mutable(jdm_array_t*arr, jdm_array_predicate
 jdm_array_status_t jdm_array_filter(jdm_array_t*arr, jdm_array_t** out_filtered, jdm_array_predicate_func_t predicate_func);
 sz jdm_array_count_of(jdm_array_t*arr, u8* elem);
 sz jdm_array_element_size(jdm_array_t*arr);
-sz jdm_array_size(jdm_array_t*arr);
+sz jdm_array_size(const jdm_array_t*arr);
 sz jdm_array_capacity(jdm_array_t*arr);
 
 // Iterator for jdm_array_t and its associated functions
