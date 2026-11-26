@@ -1,5 +1,6 @@
 #include "jdm-array.h"
 #include <jdm-log.h>
+#include <string.h>
 
 typedef struct {
   jdm_alloc_t* test_alloc;
@@ -17,6 +18,26 @@ static test_ctx get_test_ctx(void){
       .alloc = alloc,
       .capacity = 1024,
       .element_size = sizeof(int),
+      .exp_factor = 2,
+    }
+  );
+  return (test_ctx) {
+    .test_alloc = alloc,
+    .test_arr = arr,
+  };
+}
+
+static test_ctx get_test_ctx_with_str(void){
+  jdm_alloc_t* alloc = jdm_alloc_create(
+    (jdm_alloc_config_t) {
+      .type = JDM_ALLOC_SYSTEM
+    }
+  );
+  jdm_array_t* arr = jdm_array_create(
+    (jdm_array_config_t) {
+      .alloc = alloc,
+      .capacity = 1024,
+      .element_size = sizeof(char*),
       .exp_factor = 2,
     }
   );
@@ -863,6 +884,72 @@ static b8 test_array_zip_iterator(void) {
   return JDM_TRUE;
 }
 
+static b8 test_array_pointer(void) {
+  test_ctx ctx = get_test_ctx_with_str();
+  jdm_array_t* arr = ctx.test_arr;
+  int* elem = NULL;
+  jdm_array_status_t s;
+
+  char* str1 = jdm_calloc(ctx.test_alloc, 6, sizeof(char));
+  strcpy(str1, "test1");
+  JDM_LOG_ERROR("str1 (%p)", str1);
+  char* str2 = jdm_calloc(ctx.test_alloc, 6, sizeof(char));
+  strcpy(str2, "test2");
+  JDM_LOG_ERROR("str2 (%p)", str2);
+  char* str3 = jdm_calloc(ctx.test_alloc, 6, sizeof(char));
+  strcpy(str3, "test3");
+  JDM_LOG_ERROR("str3 (%p)", str3);
+
+  jdm_array_add(arr, (u8*)&str1);
+  jdm_array_add(arr, (u8*)&str2);
+  jdm_array_add(arr, (u8*)&str3);
+
+  char** out = jdm_alloc(ctx.test_alloc, sizeof(char*));
+  *out = JDM_NULL;
+  jdm_array_get_at(arr, (u8**)&out, 0);
+  if(0 != strcmp(str1, *out)) {
+    JDM_LOG_ERROR("pointer get at failed");
+    JDM_LOG_ERROR("%s, %s", str1, out);
+    jdm_free(ctx.test_alloc, str1);
+    jdm_free(ctx.test_alloc, str2);
+    jdm_free(ctx.test_alloc, str3);
+    jdm_free(ctx.test_alloc, out);
+    destroy_test_ctx(ctx);
+    return JDM_FALSE;
+  }
+  *out = JDM_NULL;
+  jdm_array_get_at(arr, (u8**)&out, 1);
+  if(0 != strcmp(str2, *out)) {
+    JDM_LOG_ERROR("pointer get at failed");
+    JDM_LOG_ERROR("%s, %s", str2, out);
+    jdm_free(ctx.test_alloc, str1);
+    jdm_free(ctx.test_alloc, str2);
+    jdm_free(ctx.test_alloc, str3);
+    jdm_free(ctx.test_alloc, out);
+    destroy_test_ctx(ctx);
+    return JDM_FALSE;
+  }
+  *out = JDM_NULL;
+  jdm_array_get_at(arr, (u8**)&out, 2);
+  if(0 != strcmp(str3, *out)) {
+    JDM_LOG_ERROR("pointer get at failed");
+    JDM_LOG_ERROR("%s, %s", str3, out);
+    jdm_free(ctx.test_alloc, str1);
+    jdm_free(ctx.test_alloc, str2);
+    jdm_free(ctx.test_alloc, str3);
+    jdm_free(ctx.test_alloc, out);
+    destroy_test_ctx(ctx);
+    return JDM_FALSE;
+  }
+
+  jdm_free(ctx.test_alloc, str1);
+  jdm_free(ctx.test_alloc, str2);
+  jdm_free(ctx.test_alloc, str3);
+  jdm_free(ctx.test_alloc, out);
+  destroy_test_ctx(ctx);
+  return JDM_TRUE;
+}
+
 int main() {
   jdm_log_init();
   JDM_LOG_NOTICE("Starting array tests");
@@ -940,6 +1027,12 @@ int main() {
   JDM_LOG_NOTICE("Starting array zip iterator test");
   if(test_array_zip_iterator() == JDM_FALSE) {
     JDM_LOG_ERROR("Array zip iterator test failed");
+    return 1;
+  }
+
+  JDM_LOG_NOTICE("Starting array pointer test");
+  if(test_array_pointer() == JDM_FALSE) {
+    JDM_LOG_ERROR("Array pointer test failed");
     return 1;
   }
 

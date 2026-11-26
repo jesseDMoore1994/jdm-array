@@ -193,7 +193,7 @@ jdm_array_status_t jdm_array_remove_at(jdm_array_t* arr, sz index, u8* out_elem)
     }
 
     // Shift elements to the left
-    JDM_COPY_MEMORY(
+    JDM_MOVE_MEMORY(
         JDM_ARRAY_BUF_ADDR(arr, index),
         JDM_ARRAY_BUF_ADDR(arr, index + 1),
         (arr->size - index - 1) * arr->element_size
